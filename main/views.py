@@ -33,7 +33,7 @@ def Home_Page(request):
         qs = qs.filter(contact_number__icontains = input_phone)   
 
     # Paginate the queryset
-    paginator = Paginator(qs, 20)  # Show 20 records per page
+    paginator = Paginator(qs, 10)  # Show 20 records per page
     page_number = request.GET.get('page')  # Get the page number from the request
     page_obj = paginator.get_page(page_number)  # Get the correct page
 
