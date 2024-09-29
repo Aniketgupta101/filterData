@@ -6,6 +6,7 @@ import pandas as pd
 import urllib, base64
 import matplotlib.pyplot as plt
 import io
+from django.core.paginator import Paginator
 
 # Create your views here.
 def Home_Page(request):
@@ -29,15 +30,20 @@ def Home_Page(request):
         qs = qs.order_by('city')
 
     if input_phone:
-        qs = qs.filter(contact_number__icontains = input_phone)
+        qs = qs.filter(contact_number__icontains = input_phone)   
 
-    # Sort the filtered queryset by city alphabetically
-   
+    # Paginate the queryset
+    paginator = Paginator(qs, 20)  # Show 20 records per page
+    page_number = request.GET.get('page')  # Get the page number from the request
+    page_obj = paginator.get_page(page_number)  # Get the correct page
 
     # Prepare the context for rendering
     context = {
-        'queryset': qs,
-        'cities': list(cities)
+        'page_obj': page_obj,  # Pass the paginated records
+        'cities': list(cities),
+        'input_userName': input_username,
+        'input_city': input_city,
+        'input_phoneNumber': input_phone,
     }
 
     return render(request, 'index.html', context)
@@ -62,20 +68,30 @@ def Graph_Page(request):
     qs = User.objects.all().values('username', 'contact_number', 'city', 'age')
     df = pd.DataFrame(list(qs))
 
+    # Categorize the age
     df['age_category'] = df['age'].apply(categorize_age)
     
+    # Define the order for age categories
     age_order = ['<20', '20-30', '31-40', '41-50', '>50']
     df['age_category'] = pd.Categorical(df['age_category'], categories=age_order, ordered=True)
 
+    # Count frequencies of age categories
     age_category_freq = df['age_category'].value_counts().reindex(age_order).reset_index()
     age_category_freq.columns = ['age_category', 'frequency']
     
+    # Calculate the total frequency and append it to the DataFrame
+    total_frequency = age_category_freq['frequency'].sum()
+    total_row = pd.DataFrame([{'age_category': 'Total', 'frequency': total_frequency}])
+    
+    # Append the total row to the DataFrame
+    age_category_freq = pd.concat([age_category_freq, total_row], ignore_index=True)
+    
+    # Convert the updated DataFrame to a dictionary
     df_dict = age_category_freq.to_dict(orient='records')
-
 
     # Create the plot
     fig, ax = plt.subplots()
-    ax.bar(age_category_freq['age_category'], age_category_freq['frequency'], color='skyblue')
+    ax.bar(age_category_freq['age_category'][:-1], age_category_freq['frequency'][:-1], color='skyblue')  # Exclude 'Total' for bar plot
     
     # Set labels and title
     ax.set_xlabel('Age Category')

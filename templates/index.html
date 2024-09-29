@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
-  <title>Filter Form</title>
+  <title>Filter Data</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="{% static 'template.css' %}">
@@ -36,7 +36,7 @@
 
   <main role="main" class="container">
 
-    <h3>Filter User-Data</h3>
+    <h3>Filter User data</h3>
     <form method="GET" action=".">
       <div class="form-row">
         <div class="form-group col-12">
@@ -88,12 +88,12 @@
               </tr>
           </thead>
           <tbody>
-            {% if queryset.all|length == 0 %}
+            {% if page_obj.object_list|length == 0 %}
             <tr>
                 <td colspan="6" class="text-center">No records found</td>
             </tr>
             {% else %}
-            {% for i in queryset.all %}
+            {% for i in page_obj %}
             <tr>
                 <td>{{ i.username }}</td>
                 <td>{{ i.contact_number }}</td>
@@ -106,7 +106,39 @@
             {% endif %}
         </tbody>
       </table>
-  </div>
+    </div>
+
+    <!-- Pagination Controls -->
+    <nav>
+      <ul class="pagination">
+          {% if page_obj.has_previous %}
+              <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}">
+                      Previous
+                  </a>
+              </li>
+          {% endif %}
+  
+          {% for page_num in page_obj.paginator.page_range %}
+              <li class="page-item {% if page_num == page_obj.number %}active{% endif %}">
+                  <a class="page-link" href="?page={{ page_num }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}">
+                      {{ page_num }}
+                  </a>
+              </li>
+          {% endfor %}
+  
+          {% if page_obj.has_next %}
+              <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}">
+                      Next
+                  </a>
+              </li>
+          {% endif %}
+      </ul>
+  </nav>
+  
+
+  
   
 
   </main>
