@@ -3,153 +3,220 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <title>Filter Data</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <link rel="stylesheet" href="{% static 'template.css' %}">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-    integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title>Filter Data</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'template.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #e9ecef; /* Light background for the body */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Improved font style */
+        }
+
+        h3 {
+            text-align: center;
+            margin: 30px 0;
+            color: #007BFF; /* Primary color for headings */
+        }
+
+        .form-control {
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ced4da; /* Default border color */
+        }
+
+        .form-check-input {
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            background-color: darkcyan;
+            border-color: darkcyan;
+            transition: background-color 0.3s ease;
+            padding: 10px 20px; /* Increased padding for buttons */
+            font-weight: bold; /* Bold text for buttons */
+        }
+
+        .btn-primary:hover {
+            background-color: teal;
+        }
+
+        .pagination .page-link {
+            color: darkcyan;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: darkcyan;
+            border-color: darkcyan;
+        }
+
+        .table {
+            margin-top: 20px;
+            background-color: #ffffff; /* White background for the table */
+            border-radius: 8px; /* Rounded corners for the table */
+            overflow: hidden; /* Prevent overflow */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+        }
+
+        th {
+            background-color: #007BFF; /* Primary color for table header */
+            color: white; /* White text for header */
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .form-check-label {
+            margin-left: 5px;
+        }
+    </style>
 </head>
 
 <body>
 
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Navigation</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
-      aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'home' %}">Data</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'graph' %}">Graphs</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-
-  <main role="main" class="container">
-
-    <h3>Filter User data</h3>
-    <form method="GET" action=".">
-      <div class="form-row">
-        <div class="form-group col-12">
-          <div class="input-group">
-            <input class="form-control py-2 border-right-0 border" type="search" name="input_userName"
-              placeholder="Username" style="max-width: 100%;" />
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group col-12">
-          <div class="input-group">
-            <input class="form-control py-2 border-right-0 border" type="search" name="input_phoneNumber"
-              placeholder="Phone Number" style="max-width: 100%;" />
-          </div>
-        </div>
-      </div>
-    </form>    
-      
-      <div class="form-group col-md-4">
-        <label for="input_city">City</label>
-        <div id="input_city">
-          {% for city in cities %}
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="input_city" value="{{ city }}" id="city_{{ forloop.counter }}">
-            <label class="form-check-label" for="city_{{ forloop.counter }}">
-              {{ city }}
-            </label>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-      
-
-      <button type="submit" class="btn btn-primary">Search</button>
-    </form>
-
-    <hr />
-
-      <!-- Pagination Controls -->
-      <nav>
-        <ul class="pagination d-flex justify-content-center">
-            {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}">
-                        Previous
-                    </a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Navigation</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Data</a>
                 </li>
-            {% endif %}
-    
-            {% for page_num in page_obj.paginator.page_range %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'graph' %}">Graphs</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main role="main" class="container">
+        <h3>Filter User Data</h3>
+        <form method="GET" action=".">
+            <div class="form-row">
+                <div class="form-group col-12">
+                    <div class="input-group">
+                        <input class="form-control py-2 border-right-0 border" type="search" name="input_userName"
+                            placeholder="Username" value="{{ input_userName|default:'' }}" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-12">
+                    <div class="input-group">
+                        <input class="form-control py-2 border-right-0 border" type="search" name="input_phoneNumber"
+                            placeholder="Phone Number" value="{{ input_phoneNumber|default:'' }}" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group col-12">
+                <label for="input_city">City</label>
+                <div id="input_city">
+                    <!-- All Cities checkbox -->
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="all_cities" name="select_all_cities"
+                            {% if select_all_cities %}checked{% endif %}>
+                        <label class="form-check-label" for="all_cities">All Cities</label>
+                    </div>
+
+                    <!-- Dynamic city checkboxes -->
+                    {% for city in cities %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="input_city" value="{{ city }}"
+                            id="city_{{ forloop.counter }}"
+                            {% if city in input_city %}checked{% endif %}>
+                        <label class="form-check-label" for="city_{{ forloop.counter }}">{{ city }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        <hr />
+
+        <nav>
+            <ul class="pagination d-flex justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link"
+                        href="?page={{ page_obj.previous_page_number }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}">Previous</a>
+                </li>
+                {% endif %}
+
+                {% for page_num in page_obj.paginator.page_range %}
                 <li class="page-item {% if page_num == page_obj.number %}active{% endif %}">
-                    <a class="page-link" href="?page={{ page_num }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}">
-                        {{ page_num }}
-                    </a>
+                    <a class="page-link"
+                        href="?page={{ page_num }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}">{{ page_num }}</a>
                 </li>
-            {% endfor %}
-    
-            {% if page_obj.has_next %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}">
-                        Next
-                    </a>
+                    <a class="page-link"
+                        href="?page={{ page_obj.next_page_number }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}">Next</a>
                 </li>
-            {% endif %}
-        </ul>
-    </nav>  
+                {% endif %}
+            </ul>
+        </nav>
 
-    <div class="row">
-      <table class="table table-striped">
-          <thead>
-              <tr>
-                  <th>Usernames</th>
-                  <th>Phone Numbers</th>
-                  <th>Address</th>
-                  <th>City</th>
-                  <th>Age</th>
-                  <th>professionals</th>
-              </tr>
-          </thead>
-          <tbody>
-            {% if page_obj.object_list|length == 0 %}
-            <tr>
-                <td colspan="6" class="text-center">No records found</td>
-            </tr>
-            {% else %}
-            {% for i in page_obj %}
-            <tr>
-                <td>{{ i.username }}</td>
-                <td>{{ i.contact_number }}</td>
-                <td>{{ i.address }}</td>
-                <td>{{ i.city }}</td>
-                <td>{{ i.age }}</td>
-                <td>{{ i.professional }}</td>
-            </tr>
-            {% endfor %}
-            {% endif %}
-        </tbody>
-      </table>
-    </div>
-  
-  </main>
+        <div class="row">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Usernames</th>
+                        <th>Phone Numbers</th>
+                        <th>Address</th>
+                        <th>City</th>
+                        <th>Age</th>
+                        <th>Professionals</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if page_obj.object_list|length == 0 %}
+                    <tr>
+                        <td colspan="6" class="text-center">No records found</td>
+                    </tr>
+                    {% else %}
+                    {% for i in page_obj %}
+                    <tr>
+                        <td>{{ i.username }}</td>
+                        <td>{{ i.contact_number }}</td>
+                        <td>{{ i.address }}</td>
+                        <td>{{ i.city }}</td>
+                        <td>{{ i.age }}</td>
+                        <td>{{ i.professional }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
 
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-    crossorigin="anonymous"></script>
+    </main>
 
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKpqqeE4rC1Rj9bm7kF6wO2V" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-JZ1A6mx6JtP1D3keSwJcVYSVqBLF1Ths1J7Z/aR6b5xg39Jwflf5kC9Zj07HxIO7" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-1CmrxMRARb6a3eKn00W9T0z9eZQ93nniFbbI5h7qj4XK/1EZftC4JzNkN3P6q6ZZ" crossorigin="anonymous"></script>
 </body>
 
 </html>
