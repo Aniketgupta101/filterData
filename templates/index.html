@@ -42,7 +42,7 @@
         <div class="form-group col-12">
           <div class="input-group">
             <input class="form-control py-2 border-right-0 border" type="search" name="input_userName"
-              placeholder="Username" />
+              placeholder="Username" style="max-width: 100%;" />
           </div>
         </div>
       </div>
@@ -50,10 +50,11 @@
         <div class="form-group col-12">
           <div class="input-group">
             <input class="form-control py-2 border-right-0 border" type="search" name="input_phoneNumber"
-              placeholder="Phone Number" />
+              placeholder="Phone Number" style="max-width: 100%;" />
           </div>
         </div>
       </div>
+    </form>    
       
       <div class="form-group col-md-4">
         <label for="input_city">City</label>
@@ -75,10 +76,9 @@
 
     <hr />
 
-  
       <!-- Pagination Controls -->
       <nav>
-        <ul class="pagination">
+        <ul class="pagination d-flex justify-content-center">
             {% if page_obj.has_previous %}
                 <li class="page-item">
                     <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}">

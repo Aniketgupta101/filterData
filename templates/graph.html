@@ -10,9 +10,16 @@
     integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <title>Age Category Frequency</title>
     <style>
+      
         body {
             display: flex;
             flex-direction: column;
+        }
+        h2 {
+          background-color: darkcyan;
+          padding: 8px;
+          margin: auto;
+          align-items: center;
         }
         .container {
             display: flex;
@@ -79,7 +86,6 @@
         </table>
 
         <div class="graph">
-            <h2>Age Category Frequency Bar Graph</h2>
             <img src="data:image/png;base64,{{ data_uri }}" alt="Age Category Bar Graph" />
         </div>
     </div>
