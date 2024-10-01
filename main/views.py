@@ -22,7 +22,7 @@ def Home_Page(request):
 
     # Apply filtering
     if input_username:
-        qs = qs.filter(username__icontains=input_username)  # Username filter (case-insensitive)
+        qs = qs.filter(username__exact=input_username)  # Username filter (case-insensitive)
 
     if select_all_cities:  # If "All Cities" is checked
         qs = User.objects.all()  # Get all user data without any filtering or arrangement
@@ -31,7 +31,7 @@ def Home_Page(request):
         # Do not apply ordering to maintain original order
 
     if input_phone:
-        qs = qs.filter(contact_number__icontains=input_phone)  # Phone number filter
+        qs = qs.filter(contact_number__exact=input_phone)  # Phone number filter
 
     # Paginate the queryset (4000 records per page)
     paginator = Paginator(qs, 4000)
