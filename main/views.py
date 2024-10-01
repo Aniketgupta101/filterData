@@ -28,13 +28,12 @@ def Home_Page(request):
         qs = User.objects.all()  # Get all user data without any filtering or arrangement
     elif input_city:  # If specific cities are selected
         qs = qs.filter(city__in=input_city)  # Filter by selected cities
-        # Do not apply ordering to maintain original order
 
     if input_phone:
         qs = qs.filter(contact_number__exact=input_phone)  # Phone number filter
 
-    # Paginate the queryset (4000 records per page)
-    paginator = Paginator(qs, 4000)
+    # Paginate the queryset (10 records per page)
+    paginator = Paginator(qs, 10)
     page_number = request.GET.get('page')  # Get page number from request
     page_obj = paginator.get_page(page_number)  # Paginate queryset
 

@@ -14,21 +14,21 @@
         integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <style>
         body {
-            background-color: #e9ecef; /* Light background for the body */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Improved font style */
+            background-color: #e9ecef;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         h3 {
             text-align: center;
             margin: 30px 0;
-            color: darkcyan; /* Primary color for headings */
+            color: darkcyan;
         }
 
         .form-control {
             border-radius: 5px;
             padding: 10px;
             box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
-            border: 1px solid #ced4da; /* Default border color */
+            border: 1px solid #ced4da;
         }
 
         .form-check-input {
@@ -39,34 +39,42 @@
             background-color: darkcyan;
             border-color: darkcyan;
             transition: background-color 0.3s ease;
-            padding: 10px 20px; /* Increased padding for buttons */
-            font-weight: bold; /* Bold text for buttons */
+            padding: 10px 20px;
+            font-weight: bold;
         }
 
         .btn-primary:hover {
             background-color: teal;
         }
 
-        .pagination .page-link {
-            color: darkcyan;
+        .pagination {
+            justify-content: center;
         }
 
-        .pagination .page-item.active .page-link {
+        .page-item.active .page-link {
+            z-index: 1;
+            color: #fff;
             background-color: darkcyan;
             border-color: darkcyan;
         }
 
+        .page-link-number,
+        .page-link-next,
+        .page-link-previous {
+            color: darkcyan;
+        }
+
         .table {
             margin-top: 20px;
-            background-color: #ffffff; /* White background for the table */
-            border-radius: 8px; /* Rounded corners for the table */
-            overflow: hidden; /* Prevent overflow */
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         th {
-            background-color: darkcyan; /* Primary color for table header */
-            color: white; /* White text for header */
+            background-color: darkcyan;
+            color: white;
         }
 
         .table-striped tbody tr:nth-of-type(odd) {
@@ -128,14 +136,12 @@
             <div class="form-group col-12">
                 <label for="input_city">City</label>
                 <div id="input_city">
-                    <!-- All Cities checkbox -->
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="all_cities" name="select_all_cities"
                             {% if select_all_cities %}checked{% endif %}>
                         <label class="form-check-label" for="all_cities">All Cities</label>
                     </div>
 
-                    <!-- Dynamic city checkboxes -->
                     {% for city in cities %}
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="input_city" value="{{ city }}"
@@ -155,25 +161,41 @@
             <ul class="pagination d-flex justify-content-center">
                 {% if page_obj.has_previous %}
                 <li class="page-item">
-                    <a class="page-link"
+                    <a class="page-link page-link-previous"
                         href="?page={{ page_obj.previous_page_number }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}">Previous</a>
                 </li>
                 {% endif %}
 
-                {% for page_num in page_obj.paginator.page_range %}
-                <li class="page-item {% if page_num == page_obj.number %}active{% endif %}">
-                    <a class="page-link"
-                        href="?page={{ page_num }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}">{{ page_num }}</a>
-                </li>
-                {% endfor %}
+                {% with page_range=page_obj.paginator.page_range %}
+                    {% for page_num in page_range %}
+                        {% if page_num > page_obj.number|add:-5 and page_num < page_obj.number|add:5 %}
+                            <li class="page-item {% if page_num == page_obj.number %}active{% endif %}">
+                                <a class="page-link page-link-number"
+                                   href="?page={{ page_num }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}">{{ page_num }}</a>
+                            </li>
+                        {% elif page_num == page_obj.number|add:5 %}
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        {% endif %}
+                    {% endfor %}
+                {% endwith %}
 
                 {% if page_obj.has_next %}
                 <li class="page-item">
-                    <a class="page-link"
+                    <a class="page-link page-link-next"
                         href="?page={{ page_obj.next_page_number }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}">Next</a>
                 </li>
                 {% endif %}
             </ul>
+            <div class="d-flex justify-content-between">
+                <div>
+                    <a class="btn btn-primary"
+                       href="?page={{ page_obj.number|add:-10 }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}">Previous 10</a>
+                </div>
+                <div>
+                    <a class="btn btn-primary"
+                       href="?page={{ page_obj.number|add:10 }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}">Next 10</a>
+                </div>
+            </div>
         </nav>
 
         <div class="row">
@@ -184,39 +206,35 @@
                         <th>Phone Numbers</th>
                         <th>Address</th>
                         <th>City</th>
-                        <th>Age</th>
-                        <th>Professionals</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% if page_obj.object_list|length == 0 %}
+                    {% for user in page_obj %}
                     <tr>
-                        <td colspan="6" class="text-center">No records found</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.phone_number }}</td>
+                        <td>{{ user.address }}</td>
+                        <td>{{ user.city }}</td>
                     </tr>
-                    {% else %}
-                    {% for i in page_obj %}
+                    {% empty %}
                     <tr>
-                        <td>{{ i.username }}</td>
-                        <td>{{ i.contact_number }}</td>
-                        <td>{{ i.address }}</td>
-                        <td>{{ i.city }}</td>
-                        <td>{{ i.age }}</td>
-                        <td>{{ i.professional }}</td>
+                        <td colspan="4" class="text-center">No results found.</td>
                     </tr>
                     {% endfor %}
-                    {% endif %}
                 </tbody>
             </table>
         </div>
-
     </main>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKpqqeE4rC1Rj9bm7kF6wO2V" crossorigin="anonymous"></script>
+        integrity="sha384-q8i/X+965DzO0rT7y34cz6Cn7g5ft6Z/hO7eeP9khw4Nc7B50Jf0aIlT7hD+x0D8"
+        crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-JZ1A6mx6JtP1D3keSwJcVYSVqBLF1Ths1J7Z/aR6b5xg39Jwflf5kC9Zj07HxIO7" crossorigin="anonymous"></script>
+        integrity="sha384-JjSmVgTD6fE8I5o4z7ZoW96I0gSt2E5e3xV5yY5yHl4HpklrPeV3bB2MaBebYxAK"
+        crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-1CmrxMRARb6a3eKn00W9T0z9eZQ93nniFbbI5h7qj4XK/1EZftC4JzNkN3P6q6ZZ" crossorigin="anonymous"></script>
+        integrity="sha384-ozxIP5nPTOdSoB+7dL6vG1D3PrGf6pV2HR3h2G3uWoHDm3RFyXHPHNk1F+Nz5Y5b"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>
