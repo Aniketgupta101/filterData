@@ -11,35 +11,37 @@
     <title>Age Category Frequency</title>
     <style>
         body {
-            display: flex;
-            flex-direction: column;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa; /* Light background for the body */
+            background-color: #e9ecef; /* Light background for the body */
         }
 
         h2 {
-            background-color: darkcyan;
-            padding: 10px;
+            padding: 20px;
             margin: 20px auto;
-            color: white;
+            color: darkcyan;
             text-align: center;
-            border-radius: 8px;
             max-width: 80%;
         }
 
         .container {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between; /* Space between table and graph */
             margin: 30px auto;
-            width: 80%;
+            max-width: 1150px; /* Max width for larger screens */
+            padding: 20px;
+            border-radius: 8px; /* Rounded corners for the container */
+            background-color: #fff; /* White background for the container */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Shadow for the container */
         }
 
         table {
-            width: 50%;
-            margin-right: 20px;
+            width: 48%; /* Adjusted width for better spacing */
             border-radius: 8px; /* Rounded corners for the table */
             overflow: hidden; /* Prevent overflow */
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+            border: 1px solid #ddd; /* Outline for the table */
+            background-color: #ffffff; /* White background for the table */
+            margin-right: 20px; /* Space between table and graph */
         }
 
         th,
@@ -47,20 +49,45 @@
             padding: 15px;
             border: 1px solid #ddd;
             text-align: center;
-            background-color: #f9f9f9;
+            background-color: #f9f9f9; /* Light grey for table cells */
         }
 
         th {
-            background-color: #007BFF; /* Primary color for table header */
+            background-color: darkcyan; /* Primary color for table header */
             color: white; /* White text for header */
         }
 
-        .graph img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        .graph {
+            width: 48%; /* Ensure graph takes equal space as the table */
+            border-radius: 8px; /* Rounded corners for the graph */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+            background-color: #ffffff; /* White background for the graph container */
+            padding: 20px; /* Padding inside the graph container */
         }
+
+        canvas {
+            border-radius: 8px; /* Rounded corners for the canvas */
+            max-width: 100%; /* Ensure responsiveness */
+            height: 300px; /* Set a fixed height for the graph */
+        }
+
+        .bg-light{
+            background-color:#e9ecef;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column; /* Stack table and graph on small screens */
+            }
+
+            table,
+            .graph {
+                width: 100%; /* Full width on smaller screens */
+                margin-right: 0; /* Remove right margin */
+                margin-bottom: 20px; /* Space below graph */
+            }
+        }
+
     </style>
 </head>
 
@@ -105,7 +132,7 @@
         </table>
 
         <div class="graph">
-            <img src="data:image/png;base64,{{ data_uri }}" alt="Age Category Bar Graph" />
+            <canvas id="ageCategoryGraph" alt="Age Category Bar Graph"></canvas>
         </div>
     </div>
 
@@ -118,6 +145,48 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+
+    <!-- Chart.js for interactive graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Prepare data for Chart.js
+        const ageCategories = [ {% for row in age_category_data %}'{{ row.age_category }}'{% if not forloop.last %}, {% endif %}{% endfor %} ];
+        const frequencies = [ {% for row in age_category_data %}{{ row.frequency }}{% if not forloop.last %}, {% endif %}{% endfor %} ];
+
+        const ctx = document.getElementById('ageCategoryGraph').getContext('2d');
+
+        const ageCategoryGraph = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ageCategories,
+                datasets: [{
+                    label: 'Frequency',
+                    data: frequencies,
+                    backgroundColor: 'rgba(0, 188, 212, 0.5)',
+                    borderColor: 'darkcyan',
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // Allow custom height
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return `Frequency: ${tooltipItem.raw}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>
