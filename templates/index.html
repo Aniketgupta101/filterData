@@ -7,9 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <title>Filter Data</title>
+    
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'template.css' %}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
         integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <style>
@@ -141,17 +141,23 @@
                             {% if select_all_cities %}checked{% endif %}>
                         <label class="form-check-label" for="all_cities">All Cities</label>
                     </div>
-
-                    {% for city in cities %}
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="input_city" value="{{ city }}"
-                            id="city_{{ forloop.counter }}"
-                            {% if city in input_city %}checked{% endif %}>
-                        <label class="form-check-label" for="city_{{ forloop.counter }}">{{ city }}</label>
+            
+                    <div class="form-group">
+                        <label for="input_city">Select City</label>
+                        <select class="form-select" name="input_city" id="input_city">
+                            <option value="" disabled selected>Select a city</option>
+                            {% for city in cities %}
+                                <option value="{{ city }}"
+                                    {% if city == input_city %}selected{% endif %}>
+                                    {{ city }}
+                                </option>
+                            {% endfor %}
+                        </select>
                     </div>
-                    {% endfor %}
                 </div>
             </div>
+            
+            
 
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
@@ -189,11 +195,11 @@
             <div class="d-flex justify-content-between">
                 <div>
                     <a class="btn btn-primary"
-                       href="?page={{ page_obj.number|add:-10 }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}">Previous 10</a>
+                       href="?page={{ page_obj.number|add:-10 }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}"> <<< </a>
                 </div>
                 <div>
                     <a class="btn btn-primary"
-                       href="?page={{ page_obj.number|add:10 }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}">Next 10</a>
+                       href="?page={{ page_obj.number|add:10 }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}"> >>> </a>
                 </div>
             </div>
         </nav>
@@ -206,15 +212,17 @@
                         <th>Phone Numbers</th>
                         <th>Address</th>
                         <th>City</th>
+                        <th>professional</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for user in page_obj %}
                     <tr>
                         <td>{{ user.username }}</td>
-                        <td>{{ user.phone_number }}</td>
+                        <td>{{ user.contact_number }}</td>
                         <td>{{ user.address }}</td>
                         <td>{{ user.city }}</td>
+                        <td>{{ user.professional }}</td>
                     </tr>
                     {% empty %}
                     <tr>
@@ -225,6 +233,8 @@
             </table>
         </div>
     </main>
+
+    
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7y34cz6Cn7g5ft6Z/hO7eeP9khw4Nc7B50Jf0aIlT7hD+x0D8"
@@ -237,4 +247,4 @@
         crossorigin="anonymous"></script>
 </body>
 
-</html>
+</html> 

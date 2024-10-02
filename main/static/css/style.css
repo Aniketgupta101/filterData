@@ -1,0 +1,77 @@
+body {
+    background-color: #e9ecef;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h3 {
+    text-align: center;
+    margin: 30px 0;
+    color: darkcyan;
+}
+
+.form-control {
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ced4da;
+}
+
+.form-check-input {
+    margin-right: 10px;
+}
+
+.btn-primary {
+    background-color: darkcyan;
+    border-color: darkcyan;
+    transition: background-color 0.3s ease;
+    padding: 10px 20px;
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background-color: teal;
+}
+
+.pagination {
+    justify-content: center;
+}
+
+.page-item.active .page-link {
+    z-index: 1;
+    color: #fff;
+    background-color: darkcyan;
+    border-color: darkcyan;
+}
+
+.page-link-number,
+.page-link-next,
+.page-link-previous {
+    color: darkcyan;
+}
+
+.table {
+    margin-top: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+th {
+    background-color: darkcyan;
+    color: white;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.form-check-label {
+    margin-left: 5px;
+}
