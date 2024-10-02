@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <title>Filter Data</title>
-    
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
@@ -84,11 +84,17 @@
         .form-check {
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
+            margin-right: 15px;
         }
 
         .form-check-label {
             margin-left: 5px;
+        }
+
+        /* Horizontal alignment for checkboxes */
+        #input_city_checkboxes {
+            display: flex;
+            flex-wrap: wrap;
         }
     </style>
 </head>
@@ -127,37 +133,35 @@
             <div class="form-row">
                 <div class="form-group col-12">
                     <div class="input-group">
-                        <input class="form-control py-2 border-right-0 border" type="search" name="input_phoneNumber"
-                            placeholder="Phone Number" value="{{ input_phoneNumber|default:'' }}" />
+                        <input class="form-control py-2 border-right-0 border" type="search" name="input_contactNumber"
+                            placeholder="contact Number" value="{{ input_contactNumber|default:'' }}" />
                     </div>
                 </div>
             </div>
-
-            <div class="form-group col-12">
-                <label for="input_city">City</label>
-                <div id="input_city">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="all_cities" name="select_all_cities"
-                            {% if select_all_cities %}checked{% endif %}>
-                        <label class="form-check-label" for="all_cities">All Cities</label>
-                    </div>
-            
+                    
+                    
+                    <!-- Cities Checkboxes in a horizontal layout -->
                     <div class="form-group">
                         <label for="input_city">Select City</label>
-                        <select class="form-select" name="input_city" id="input_city">
-                            <option value="" disabled selected>Select a city</option>
-                            {% for city in cities %}
-                                <option value="{{ city }}"
-                                    {% if city == input_city %}selected{% endif %}>
+                        <div id="input_city_checkboxes">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="all_cities" name="select_all_cities"
+                                    {% if select_all_cities %}checked{% endif %}>
+                                <label class="form-check-label" for="all_cities">All Cities</label>
+                            </div>
+                            {% for city in cities %} 
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="city_{{ city }}" name="input_city"
+                                    value="{{ city }}" {% if city == input_city %}checked{% endif %}>
+                                <label class="form-check-label" for="city_{{ city }}">
                                     {{ city }}
-                                </option>
+                                </label>
+                            </div>
                             {% endfor %}
-                        </select>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            
 
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
@@ -168,83 +172,69 @@
                 {% if page_obj.has_previous %}
                 <li class="page-item">
                     <a class="page-link page-link-previous"
-                        href="?page={{ page_obj.previous_page_number }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}">Previous</a>
+                        href="?page={{ page_obj.previous_page_number }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_contactNumber %}&input_contactNumber={{ input_contactNumber }}{% endif %}">Previous</a>
                 </li>
                 {% endif %}
 
                 {% with page_range=page_obj.paginator.page_range %}
-                    {% for page_num in page_range %}
-                        {% if page_num > page_obj.number|add:-5 and page_num < page_obj.number|add:5 %}
-                            <li class="page-item {% if page_num == page_obj.number %}active{% endif %}">
-                                <a class="page-link page-link-number"
-                                   href="?page={{ page_num }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}">{{ page_num }}</a>
-                            </li>
-                        {% elif page_num == page_obj.number|add:5 %}
-                            <li class="page-item disabled"><span class="page-link">...</span></li>
-                        {% endif %}
-                    {% endfor %}
+                {% for page_num in page_range %}
+                {% if page_num > page_obj.number|add:-5 and page_num < page_obj.number|add:5 %}
+                <li class="page-item {% if page_num == page_obj.number %}active{% endif %}">
+                    <a class="page-link page-link-number"
+                        href="?page={{ page_num }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_contactNumber %}&input_contactNumber={{ input_contactNumber }}{% endif %}">{{ page_num }}</a>
+                </li>
+                {% elif page_num == page_obj.number|add:5 %}
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+                {% endif %}
+                {% endfor %}
                 {% endwith %}
 
                 {% if page_obj.has_next %}
                 <li class="page-item">
                     <a class="page-link page-link-next"
-                        href="?page={{ page_obj.next_page_number }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}">Next</a>
+                        href="?page={{ page_obj.next_page_number }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_contactNumber %}&input_contactNumber={{ input_contactNumber }}{% endif %}">Next</a>
                 </li>
                 {% endif %}
             </ul>
-            <div class="d-flex justify-content-between">
-                <div>
-                    <a class="btn btn-primary"
-                       href="?page={{ page_obj.number|add:-10 }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}"> <<< </a>
-                </div>
-                <div>
-                    <a class="btn btn-primary"
-                       href="?page={{ page_obj.number|add:10 }}{% if input_userName %}&input_userName={{ input_userName }}{% endif %}{% for city in input_city %}&input_city={{ city }}{% endfor %}{% if input_phoneNumber %}&input_phoneNumber={{ input_phoneNumber }}{% endif %}"> >>> </a>
-                </div>
-            </div>
+            
         </nav>
-
-        <div class="row">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Usernames</th>
-                        <th>Phone Numbers</th>
-                        <th>Address</th>
-                        <th>City</th>
-                        <th>professional</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user in page_obj %}
-                    <tr>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.contact_number }}</td>
-                        <td>{{ user.address }}</td>
-                        <td>{{ user.city }}</td>
-                        <td>{{ user.professional }}</td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="4" class="text-center">No results found.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>contact Number</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>Age</th>
+                    <th>Professional</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in page_obj %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.contact_number }}</td>
+                    <td>{{ user.address }}</td>
+                    <td>{{ user.city }}</td>
+                    <td>{{ user.age }}</td>
+                    <td>{{ user.professional }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </main>
-
-    
-
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7y34cz6Cn7g5ft6Z/hO7eeP9khw4Nc7B50Jf0aIlT7hD+x0D8"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-JjSmVgTD6fE8I5o4z7ZoW96I0gSt2E5e3xV5yY5yHl4HpklrPeV3bB2MaBebYxAK"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGaH1HZPR6h4Jj2gATvJRa1xU8"
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-ozxIP5nPTOdSoB+7dL6vG1D3PrGf6pV2HR3h2G3uWoHDm3RFyXHPHNk1F+Nz5Y5b"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy1a2mWVfHnuXO8PB7xblgJpAAE3g5mOJYBg73R"
         crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
-</html> 
+</html>
