@@ -7,10 +7,10 @@ class Command(BaseCommand):
     help = 'Populate database with random users'
 
     def handle(self, *args, **kwargs):
-        cities = ['Mumbai', 'Nashik', 'Thane', 'Delhi', 'Chennai']
+        cities = ['Mumbai', 'Nashik', 'Thane', 'Dehli', 'Chennai']
         professionals = ['Management', 'Doctors', 'SDE', 'Professor']
         users_to_create = []
-        total_users = 100000
+        total_users = 100
         user = 0
         age = 0
 
